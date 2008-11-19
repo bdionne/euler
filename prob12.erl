@@ -1,37 +1,33 @@
 -module(prob12).
--export([run/1, fact/1, triangle/1]).
+-export([run/1, check_factors/3, triangle/1]).
 %%
 %% What is the value of the first triangle number to have over five hundred divisors?
 %%
 run(N) -> 
     NTriangle = triangle(N),
-    Factors = all_facts(prob3:factor(NTriangle,2,[])),
-    Bool = (length(Factors) + 2) > 5,
-    if Bool ->
-	    io:format("The first triangle number with over 500 factors is ~w",[NTriangle]);
+    Done = check_factors(NTriangle,1,0) > 500,
+    if Done ->
+	    io:format("The answer is ~w",[NTriangle]);
        true ->
 	    run(N+1)
     end.
 %%
-%%
-all_facts(ListOfPrimes) ->
-    Facts = sets:from_list(ListOfPrimes),
-    all_facts(ListOfPrimes,Facts,2);
-%%
-all_facts(ListOfPrimes, DistinctFactors, N) ->
-    lists:map(fun(E) ->
-		      
+%% turns out checking divisors is fast enough, of course we only need check up to the square root
 %
-    
-    
+check_factors(Num, Beg, Count) ->
+    Done = Beg > math:sqrt(Num),
+    if Done ->
+	    2 * Count;
+       true ->
+	    Divides = (Num rem Beg) == 0,
+	    if Divides ->
+		    check_factors(Num,Beg+1,Count+1);
+	       true ->
+		    check_factors(Num,Beg+1,Count)
+	    end
+    end.
 %%
-%%
-fact(0) ->
-    1;
-fact(N) ->
-    N * fact(N-1).
-%%
-%%
+%% compute the nth triangle number
 triangle(1) ->
     1;
 triangle(N) ->
