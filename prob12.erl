@@ -27,7 +27,7 @@ check_factors(Num, Beg, Count) ->
 	    end
     end.
 %%
-%% compute the nth triangle number
+%% compute the nth triangle number.
 triangle(1) ->
     1;
 triangle(N) ->
